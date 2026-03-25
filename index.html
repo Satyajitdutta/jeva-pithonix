@@ -630,23 +630,139 @@
           <input type="text" name="company" placeholder="e.g. Apollo Hospitals" required>
         </div>
         <div class="form-row">
-          <label>Industry</label>
-          <select name="industry">
+          <label>Industry *</label>
+          <select name="industry" required>
             <option value="" disabled selected>Select industry</option>
-            <option>Healthcare</option>
-            <option>GCC / Global Capability Centre</option>
-            <option>Banking & Finance</option>
-            <option>Retail & E-commerce</option>
-            <option>Manufacturing</option>
-            <option>Government</option>
-            <option>Other</option>
+            <optgroup label="Healthcare & Life Sciences">
+              <option>Hospital & Health System</option>
+              <option>Pharmaceuticals & Biotech</option>
+              <option>Medical Devices</option>
+              <option>Health Insurance / TPA</option>
+              <option>Diagnostics & Pathology</option>
+              <option>Telemedicine / Digital Health</option>
+            </optgroup>
+            <optgroup label="Banking, Finance & Insurance">
+              <option>Banking (Retail / Corporate)</option>
+              <option>NBFC / Fintech</option>
+              <option>Insurance</option>
+              <option>Wealth Management</option>
+              <option>Payments & Transactions</option>
+            </optgroup>
+            <optgroup label="Technology & IT Services">
+              <option>GCC / Global Capability Centre</option>
+              <option>IT Services & Consulting</option>
+              <option>SaaS / Product Company</option>
+              <option>AI / ML / Data Company</option>
+              <option>Cybersecurity</option>
+              <option>Cloud & Infrastructure</option>
+            </optgroup>
+            <optgroup label="Retail, FMCG & E-commerce">
+              <option>Retail (Offline / Omnichannel)</option>
+              <option>E-commerce / D2C</option>
+              <option>FMCG / Consumer Goods</option>
+              <option>Quick Commerce / Logistics</option>
+            </optgroup>
+            <optgroup label="Manufacturing & Industrial">
+              <option>Manufacturing (Discrete)</option>
+              <option>Manufacturing (Process)</option>
+              <option>Automotive</option>
+              <option>Energy & Utilities</option>
+              <option>Oil, Gas & Chemicals</option>
+              <option>Construction & Real Estate</option>
+            </optgroup>
+            <optgroup label="Education & Training">
+              <option>Higher Education</option>
+              <option>K-12 / School</option>
+              <option>EdTech</option>
+              <option>Corporate L&D / Training</option>
+            </optgroup>
+            <optgroup label="Government & Public Sector">
+              <option>Central Government</option>
+              <option>State Government</option>
+              <option>PSU / Public Enterprise</option>
+              <option>Defence & Security</option>
+            </optgroup>
+            <optgroup label="Professional Services">
+              <option>Legal & Compliance</option>
+              <option>Accounting & Audit</option>
+              <option>Management Consulting</option>
+              <option>HR & Staffing</option>
+            </optgroup>
+            <optgroup label="Media, Telecom & Hospitality">
+              <option>Telecom & ISP</option>
+              <option>Media & Entertainment</option>
+              <option>Hospitality & Travel</option>
+              <option>Aviation</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option>Non-Profit / NGO</option>
+              <option>Startup / Early Stage</option>
+              <option>Other</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-two-col">
+        <div class="form-row">
+          <label>Your Domain / Function</label>
+          <select name="domain">
+            <option value="" disabled selected>Select your domain</option>
+            <optgroup label="Business & Strategy">
+              <option>CEO / Founder / MD</option>
+              <option>Strategy & Business Development</option>
+              <option>Sales & Revenue</option>
+              <option>Marketing & Growth</option>
+              <option>Customer Experience / CX</option>
+            </optgroup>
+            <optgroup label="Technology & Digital">
+              <option>CTO / CIO / Technology Head</option>
+              <option>Product Management</option>
+              <option>Engineering & Development</option>
+              <option>Data & Analytics</option>
+              <option>AI / ML / Automation</option>
+              <option>IT Operations & Infrastructure</option>
+            </optgroup>
+            <optgroup label="People & Operations">
+              <option>CHRO / HR Leadership</option>
+              <option>HR Operations & Systems</option>
+              <option>Learning & Development</option>
+              <option>Finance & Accounts</option>
+              <option>Legal & Compliance</option>
+              <option>Operations / Supply Chain</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option>Investor / VC / PE</option>
+              <option>Consultant / Advisor</option>
+              <option>Academic / Researcher</option>
+              <option>Other</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Use Case Vertical</label>
+          <select name="vertical">
+            <option value="" disabled selected>What will you use JEVA for?</option>
+            <option>Autonomous Outbound Sales Calls</option>
+            <option>Inbound Customer Support</option>
+            <option>Lead Qualification & Nurturing</option>
+            <option>Appointment Booking & Scheduling</option>
+            <option>Enterprise Internal Helpdesk</option>
+            <option>HR & Recruitment Automation</option>
+            <option>Patient Engagement (Healthcare)</option>
+            <option>Collections & Payment Follow-ups</option>
+            <option>GCC Productivity & Operations</option>
+            <option>Government Citizen Services</option>
+            <option>Multilingual Customer Engagement</option>
+            <option>Post-Sale Account Management</option>
+            <option>Other / Exploring</option>
           </select>
         </div>
       </div>
 
       <div class="form-row">
         <label>What excites you most about JEVA?</label>
-        <input type="text" name="interest" placeholder="e.g. Autonomous sales calls, multilingual support...">
+        <input type="text" name="interest" placeholder="e.g. Autonomous sales calls, multilingual support, emotional intelligence...">
       </div>
 
       <button type="submit" class="submit-btn" id="submit-btn">
