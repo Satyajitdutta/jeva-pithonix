@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JEVA — The Voice of Your Enterprise | Pithonix.ai</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --black: #050608;
@@ -18,12 +18,11 @@
     --amber: #ffb347;
     --white: #f0f2f5;
     --muted: rgba(240,242,245,0.45);
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'Outfit', sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -35,16 +34,13 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE OVERLAY ── */
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    opacity: 0.4;
+    pointer-events: none; opacity: 0.4;
   }
 
-  /* ── AMBIENT GLOW ── */
   .ambient {
     position: fixed; width: 700px; height: 700px;
     border-radius: 50%; pointer-events: none; z-index: 0;
@@ -57,7 +53,7 @@
     to   { transform: translateX(-45%) translateY(60px); }
   }
 
-  /* ── NAV ── */
+  /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; justify-content: space-between; align-items: center;
@@ -67,31 +63,30 @@
     border-bottom: 1px solid var(--border);
   }
   .nav-logo {
-    font-family: var(--font-display);
-    font-size: 18px; font-weight: 700;
+    font-family: var(--font-body);
+    font-size: 17px; font-weight: 600; letter-spacing: 0.04em;
     color: var(--white); text-decoration: none;
     display: flex; align-items: center; gap: 10px;
+    text-transform: uppercase;
   }
-  .nav-logo span {
-    color: var(--teal);
-  }
+  .nav-logo span { color: var(--teal); }
   .nav-pill {
     font-size: 12px; letter-spacing: 0.08em; font-weight: 500;
     color: var(--teal); background: var(--teal-dim);
     border: 1px solid rgba(0,229,200,0.25);
     padding: 5px 14px; border-radius: 99px;
-    text-transform: uppercase;
+    text-transform: uppercase; font-family: var(--font-body);
   }
   .nav-cta {
     background: var(--teal); color: var(--black);
-    font-family: var(--font-display); font-weight: 700;
+    font-family: var(--font-body); font-weight: 600;
     font-size: 13px; padding: 10px 24px; border-radius: 8px;
     text-decoration: none; transition: all 0.2s;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em; text-transform: uppercase;
   }
   .nav-cta:hover { background: #00ffdf; box-shadow: 0 0 24px var(--teal-glow); }
 
-  /* ── HERO ── */
+  /* HERO */
   .hero {
     position: relative; z-index: 1;
     min-height: 100vh;
@@ -106,14 +101,13 @@
     border: 1px solid rgba(0,229,200,0.3);
     background: rgba(0,229,200,0.06);
     padding: 8px 18px; border-radius: 99px; margin-bottom: 36px;
-    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--teal); font-weight: 600;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--teal); font-weight: 500; font-family: var(--font-body);
     animation: fadeUp 0.8s ease both;
   }
   .hero-badge .dot {
     width: 7px; height: 7px; border-radius: 50%;
-    background: var(--teal);
-    box-shadow: 0 0 8px var(--teal);
+    background: var(--teal); box-shadow: 0 0 8px var(--teal);
     animation: pulse 1.8s ease-in-out infinite;
   }
   @keyframes pulse {
@@ -123,52 +117,49 @@
 
   .hero h1 {
     font-family: var(--font-display);
-    font-size: clamp(46px, 7vw, 96px);
-    font-weight: 800; line-height: 1.0;
-    letter-spacing: -0.03em;
-    margin-bottom: 12px;
+    font-size: clamp(56px, 8.5vw, 112px);
+    font-weight: 700; line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
     animation: fadeUp 0.9s 0.1s ease both;
   }
   .hero h1 em {
-    font-style: normal;
+    font-style: italic;
     background: linear-gradient(90deg, var(--teal) 0%, #7fffee 50%, var(--amber) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .hero-sub {
-    font-family: var(--font-display);
-    font-size: clamp(18px, 2.5vw, 28px);
-    font-weight: 600; color: var(--muted);
-    margin-bottom: 24px;
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.8vw, 18px);
+    font-weight: 300; color: var(--muted);
+    margin-bottom: 28px; letter-spacing: 0.14em; text-transform: uppercase;
     animation: fadeUp 1s 0.2s ease both;
   }
 
   .hero-desc {
-    max-width: 620px; font-size: 17px;
+    max-width: 580px; font-size: 17px; font-weight: 300;
     color: rgba(240,242,245,0.55);
-    line-height: 1.8; margin: 0 auto 52px;
+    line-height: 1.85; margin: 0 auto 52px;
     animation: fadeUp 1s 0.3s ease both;
   }
 
-  /* ── WAVEFORM CANVAS ── */
+  /* WAVEFORM */
   .wave-container {
     position: relative; width: 100%; max-width: 680px;
     height: 90px; margin: 0 auto 52px;
     animation: fadeUp 1s 0.35s ease both;
   }
-  canvas#waveform {
-    width: 100%; height: 100%;
-    display: block;
-  }
+  canvas#waveform { width: 100%; height: 100%; display: block; }
   .wave-label {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    font-family: var(--font-display); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase;
+    font-family: var(--font-body); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--teal); opacity: 0.7;
   }
 
-  /* ── CTA BLOCK ── */
+  /* CTA */
   .cta-block {
     display: flex; flex-direction: column; align-items: center; gap: 16px;
     animation: fadeUp 1s 0.45s ease both;
@@ -183,60 +174,58 @@
   }
   .waitlist-form input {
     flex: 1; background: transparent; border: none; outline: none;
-    padding: 16px 20px; font-family: var(--font-body); font-size: 15px;
+    padding: 16px 20px; font-family: var(--font-body); font-size: 15px; font-weight: 300;
     color: var(--white);
   }
   .waitlist-form input::placeholder { color: rgba(240,242,245,0.28); }
   .waitlist-form button {
     background: var(--teal); color: var(--black);
     border: none; padding: 16px 28px; cursor: pointer;
-    font-family: var(--font-display); font-weight: 700; font-size: 13px;
-    letter-spacing: 0.04em; transition: all 0.2s; white-space: nowrap;
+    font-family: var(--font-body); font-weight: 600; font-size: 12px;
+    letter-spacing: 0.1em; transition: all 0.2s; white-space: nowrap;
+    text-transform: uppercase;
   }
   .waitlist-form button:hover { background: #00ffdf; }
-  .cta-note { font-size: 12px; color: var(--muted); letter-spacing: 0.03em; }
-  .cta-note strong { color: var(--teal); }
+  .cta-note { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; font-weight: 300; }
+  .cta-note strong { color: var(--teal); font-weight: 500; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(28px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── STATS BAR ── */
+  /* STATS */
   .stats-bar {
     position: relative; z-index: 1;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
     padding: 32px 60px;
-    display: flex; justify-content: center;
-    gap: 80px; flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 80px; flex-wrap: wrap;
     background: rgba(13,16,23,0.5);
   }
   .stat { text-align: center; }
   .stat-num {
-    font-family: var(--font-display); font-size: 38px; font-weight: 800;
-    color: var(--teal); line-height: 1;
-    display: block; margin-bottom: 6px;
+    font-family: var(--font-display); font-size: 42px; font-weight: 700;
+    color: var(--teal); line-height: 1; display: block; margin-bottom: 6px;
   }
-  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400; }
 
-  /* ── SECTION SHARED ── */
+  /* SECTIONS */
   section { position: relative; z-index: 1; padding: 100px 24px; }
   .section-tag {
-    display: inline-block; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--teal); margin-bottom: 18px;
+    display: inline-block; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 18px; font-family: var(--font-body);
   }
   .section-title {
-    font-family: var(--font-display); font-size: clamp(30px, 4vw, 52px);
-    font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
-    margin-bottom: 18px;
+    font-family: var(--font-display); font-size: clamp(36px, 4.5vw, 62px);
+    font-weight: 700; line-height: 1.05; letter-spacing: -0.01em;
+    margin-bottom: 20px;
   }
-  .section-body { font-size: 17px; color: rgba(240,242,245,0.55); line-height: 1.8; max-width: 560px; }
+  .section-body { font-size: 16px; font-weight: 300; color: rgba(240,242,245,0.55); line-height: 1.85; max-width: 560px; }
   .center { text-align: center; }
   .center .section-body { margin: 0 auto; }
 
-  /* ── HOW IT WORKS ── */
+  /* HOW IT WORKS */
   .how-grid {
     max-width: 1100px; margin: 70px auto 0;
     display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -250,7 +239,7 @@
   .how-step::after {
     content: attr(data-step);
     position: absolute; top: 20px; right: 24px;
-    font-family: var(--font-display); font-size: 64px; font-weight: 800;
+    font-family: var(--font-display); font-size: 72px; font-weight: 700;
     color: rgba(255,255,255,0.03); line-height: 1;
   }
   .step-icon {
@@ -260,12 +249,12 @@
     font-size: 22px; margin-bottom: 20px;
   }
   .how-step h3 {
-    font-family: var(--font-display); font-size: 17px; font-weight: 700;
-    margin-bottom: 10px; line-height: 1.3;
+    font-family: var(--font-display); font-size: 20px; font-weight: 700;
+    margin-bottom: 10px; line-height: 1.25;
   }
-  .how-step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .how-step p { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.75; }
 
-  /* ── FEATURES ── */
+  /* FEATURES */
   .features-layout {
     max-width: 1100px; margin: 70px auto 0;
     display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
@@ -286,20 +275,18 @@
   .feat-card.wide { grid-column: span 2; }
   .feat-icon { font-size: 28px; margin-bottom: 18px; display: block; }
   .feat-card h3 {
-    font-family: var(--font-display); font-size: 20px; font-weight: 700;
-    margin-bottom: 10px;
+    font-family: var(--font-display); font-size: 22px; font-weight: 700;
+    margin-bottom: 10px; line-height: 1.2;
   }
-  .feat-card p { font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .feat-card p { font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.8; }
 
-  /* ── EMOTIONAL RADAR ── */
+  /* EMOTIONAL */
   .emotion-section { background: var(--deep); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .emotion-inner {
     max-width: 1100px; margin: 0 auto;
     display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
   }
-  .emotion-viz {
-    position: relative; height: 340px;
-  }
+  .emotion-viz { position: relative; height: 340px; }
   .emotion-ring {
     position: absolute; border-radius: 50%; border: 1px solid;
     top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -314,8 +301,7 @@
     width:70px; height:70px; border-radius:50%;
     background: radial-gradient(circle, rgba(0,229,200,0.5), rgba(0,229,200,0.1));
     border: 2px solid var(--teal);
-    display:flex; align-items:center; justify-content:center;
-    font-size:26px;
+    display:flex; align-items:center; justify-content:center; font-size:26px;
     box-shadow: 0 0 40px var(--teal-glow);
     animation: breathe 3s ease-in-out infinite;
   }
@@ -323,44 +309,36 @@
     0%,100% { box-shadow: 0 0 30px var(--teal-glow); }
     50% { box-shadow: 0 0 60px var(--teal-glow), 0 0 100px rgba(0,229,200,0.15); }
   }
-  .emotion-dot {
-    position:absolute; width:10px; height:10px; border-radius:50%;
-    background: var(--teal); top:50%; left:50%;
-    box-shadow: 0 0 10px var(--teal);
-  }
-  .emotion-tags {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
-  }
+  .emotion-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
   .etag {
-    padding: 7px 16px; border-radius: 99px; font-size: 13px; font-weight: 500;
-    border: 1px solid; letter-spacing: 0.03em;
+    padding: 7px 16px; border-radius: 99px; font-size: 12px; font-weight: 400;
+    border: 1px solid; letter-spacing: 0.04em; font-family: var(--font-body);
   }
   .etag.positive { border-color: rgba(0,229,200,0.4); color: var(--teal); background: var(--teal-dim); }
   .etag.neutral  { border-color: rgba(240,242,245,0.15); color: var(--muted); background: rgba(255,255,255,0.04); }
   .etag.alert    { border-color: rgba(255,179,71,0.4); color: var(--amber); background: rgba(255,179,71,0.08); }
 
-  /* ── JEET QUOTE ── */
+  /* QUOTE */
   .quote-section { text-align: center; padding: 80px 24px; }
   .quote-box {
-    max-width: 740px; margin: 0 auto;
-    padding: 52px; border-radius: 20px;
-    background: var(--card); border: 1px solid var(--border);
+    max-width: 780px; margin: 0 auto; padding: 60px 64px;
+    border-radius: 20px; background: var(--card); border: 1px solid var(--border);
     position: relative;
   }
   .quote-box::before {
     content: '\201C';
-    font-family: var(--font-display); font-size: 120px; font-weight: 800;
-    color: rgba(0,229,200,0.1); position: absolute; top: -20px; left: 30px; line-height: 1;
+    font-family: var(--font-display); font-size: 160px; font-weight: 700;
+    color: rgba(0,229,200,0.08); position: absolute; top: -30px; left: 30px; line-height: 1;
   }
   .quote-text {
-    font-family: var(--font-display); font-size: clamp(18px, 2.5vw, 24px);
-    font-weight: 600; line-height: 1.55; color: var(--white);
-    margin-bottom: 28px; position: relative; z-index: 1;
+    font-family: var(--font-display); font-size: clamp(20px, 2.8vw, 28px);
+    font-style: italic; font-weight: 600; line-height: 1.6; color: var(--white);
+    margin-bottom: 32px; position: relative; z-index: 1;
   }
-  .quote-author { font-size: 13px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
-  .quote-author strong { color: var(--teal); }
+  .quote-author { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--font-body); font-weight: 400; }
+  .quote-author strong { color: var(--teal); font-weight: 500; }
 
-  /* ── WAITLIST FINAL ── */
+  /* FINAL CTA */
   .final-cta {
     text-align: center; padding: 100px 24px 120px;
     background: linear-gradient(180deg, transparent, rgba(0,229,200,0.03));
@@ -376,35 +354,32 @@
   }
   .final-form input {
     flex: 1; background: transparent; border: none; outline: none;
-    padding: 18px 22px; font-family: var(--font-body); font-size: 16px; color: var(--white);
+    padding: 18px 22px; font-family: var(--font-body); font-size: 15px; font-weight: 300; color: var(--white);
   }
   .final-form input::placeholder { color: rgba(240,242,245,0.25); }
   .final-form button {
     background: var(--teal); color: var(--black); border: none;
-    padding: 18px 32px; font-family: var(--font-display); font-weight: 800;
-    font-size: 14px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-    letter-spacing: 0.05em;
+    padding: 18px 32px; font-family: var(--font-body); font-weight: 600;
+    font-size: 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    letter-spacing: 0.1em; text-transform: uppercase;
   }
   .final-form button:hover { background: #00ffdf; box-shadow: 0 0 30px var(--teal-glow); }
-
   .success-msg {
     display: none; margin-top: 20px;
-    color: var(--teal); font-family: var(--font-display); font-weight: 700; font-size: 16px;
+    color: var(--teal); font-family: var(--font-body); font-weight: 500; font-size: 15px;
   }
 
-  /* ── FOOTER ── */
+  /* FOOTER */
   footer {
     border-top: 1px solid var(--border); padding: 32px 60px;
     display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 16px;
-    font-size: 13px; color: var(--muted);
-    position: relative; z-index: 1;
+    flex-wrap: wrap; gap: 16px; font-size: 12px; font-weight: 300;
+    color: var(--muted); position: relative; z-index: 1; letter-spacing: 0.03em;
   }
-  footer a { color: var(--muted); text-decoration: none; }
-  footer .logo { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--white); }
+  footer .logo { font-family: var(--font-body); font-weight: 600; font-size: 15px; color: var(--white); letter-spacing: 0.05em; text-transform: uppercase; }
   footer .logo span { color: var(--teal); }
 
-  /* ── SCROLL REVEAL ── */
+  /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -418,6 +393,7 @@
     .emotion-viz { height: 240px; }
     footer { flex-direction: column; text-align: center; padding: 24px; }
     .how-grid { grid-template-columns: 1fr; }
+    .quote-box { padding: 40px 28px; }
   }
 </style>
 </head>
@@ -425,14 +401,12 @@
 
 <div class="ambient"></div>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">PITHONIX<span>.AI</span></a>
   <span class="nav-pill">🎙 JEVA — Early Access</span>
   <a href="#waitlist" class="nav-cta">Join Waitlist</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-badge">
     <span class="dot"></span>
@@ -456,12 +430,11 @@
       <input type="email" id="hero-email" placeholder="Enter your work email" required>
       <button type="submit">Get Early Access</button>
     </form>
-    <p class="cta-note" id="hero-success" class="success-msg"></p>
+    <p class="cta-note" id="hero-success"></p>
     <p class="cta-note">Join <strong>enterprise leaders</strong> already on the waitlist. Free during beta.</p>
   </div>
 </section>
 
-<!-- STATS -->
 <div class="stats-bar reveal">
   <div class="stat">
     <span class="stat-num">&lt;500ms</span>
@@ -481,7 +454,6 @@
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
 <section>
   <div class="center reveal">
     <span class="section-tag">How It Works</span>
@@ -522,12 +494,11 @@
   </div>
 </section>
 
-<!-- EMOTIONAL INTELLIGENCE -->
 <section class="emotion-section">
   <div class="emotion-inner">
     <div class="reveal">
       <span class="section-tag">Emotional Intelligence</span>
-      <h2 class="section-title">JEVA doesn't<br>just listen.<br>It <em style="font-style:normal;color:var(--teal)">feels</em>.</h2>
+      <h2 class="section-title">JEVA doesn't<br>just listen.<br>It <em style="font-style:italic;color:var(--teal)">feels</em>.</h2>
       <p class="section-body" style="margin-bottom:28px;">
         Every 2 seconds, JEVA updates its emotional map of the client — tone, pitch, pace, pauses, and verbal cues. It shifts modes in real time: Exploratory, Empathetic, Energizing, or De-escalation.
       </p>
@@ -549,7 +520,6 @@
   </div>
 </section>
 
-<!-- FEATURES -->
 <section>
   <div class="center reveal">
     <span class="section-tag">Capabilities</span>
@@ -569,7 +539,7 @@
     <div class="feat-card">
       <span class="feat-icon">🕰</span>
       <h3>3-Layer Memory Architecture</h3>
-      <p>In-call memory holds context through the conversation. Cross-call memory means JEVA never asks a question it already knows the answer to. Company-wide memory keeps it always on-brand.</p>
+      <p>In-call memory holds context through the conversation. Cross-call memory means JEVA never asks a question it already knows the answer to.</p>
     </div>
     <div class="feat-card">
       <span class="feat-icon">🔗</span>
@@ -584,7 +554,6 @@
   </div>
 </section>
 
-<!-- FOUNDER QUOTE -->
 <section class="quote-section reveal">
   <div class="quote-box">
     <p class="quote-text">
@@ -594,7 +563,6 @@
   </div>
 </section>
 
-<!-- FINAL WAITLIST -->
 <section class="final-cta" id="waitlist">
   <span class="section-tag reveal">Early Access</span>
   <h2 class="section-title reveal">Be among the first<br>enterprises to deploy JEVA.</h2>
@@ -603,19 +571,17 @@
   </p>
   <form class="final-form reveal" onsubmit="handleWaitlist(event, 'final-success')">
     <input type="email" id="final-email" placeholder="your@company.com" required>
-    <button type="submit">CLAIM YOUR SPOT →</button>
+    <button type="submit">Claim Your Spot →</button>
   </form>
   <p class="success-msg" id="final-success"></p>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <span class="logo">PITHONIX<span>.AI</span></span>
   <span>JEVA is part of the Enterprise Nervous System · Powered by the JEET Framework</span>
   <span>© 2026 Pithonix.ai · Hyderabad, India · DPIIT Recognised</span>
 </footer>
 
-<!-- WAVEFORM ANIMATION -->
 <script>
 const canvas = document.getElementById('waveform');
 const ctx = canvas.getContext('2d');
@@ -632,8 +598,7 @@ function drawWave() {
   ctx.clearRect(0, 0, w, h);
   const barW = (w / bars) * 0.6;
   const gap   = (w / bars) * 0.4;
-  const cx    = w / 2, cy = h / 2;
-
+  const cx = w / 2, cy = h / 2;
   for (let i = 0; i < bars; i++) {
     const x = i * (barW + gap) + barW / 2;
     const dist = Math.abs(x - cx) / cx;
@@ -643,25 +608,21 @@ function drawWave() {
     const noise3 = Math.sin(i * 0.18 + time * 1.2) * 0.2;
     const amp = (noise1 + noise2 + noise3) * envelope;
     const barH = Math.max(3 * devicePixelRatio, Math.abs(amp) * cy * 0.85);
-
     const alpha = 0.3 + Math.abs(amp) * envelope * 1.2;
     const grad = ctx.createLinearGradient(0, cy - barH, 0, cy + barH);
     grad.addColorStop(0,   `rgba(0,229,200,${alpha * 0.6})`);
     grad.addColorStop(0.5, `rgba(0,229,200,${alpha})`);
     grad.addColorStop(1,   `rgba(0,229,200,${alpha * 0.6})`);
-
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.roundRect(x - barW / 2, cy - barH, barW, barH * 2, 99);
     ctx.fill();
   }
-
   time += 0.018;
   requestAnimationFrame(drawWave);
 }
 drawWave();
 
-// Scroll reveal
 const reveals = document.querySelectorAll('.reveal');
 const obs = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
@@ -673,7 +634,6 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 reveals.forEach(r => obs.observe(r));
 
-// Waitlist handler
 function handleWaitlist(e, successId) {
   e.preventDefault();
   const emailId = successId === 'hero-success' ? 'hero-email' : 'final-email';
@@ -681,8 +641,7 @@ function handleWaitlist(e, successId) {
   const msg = document.getElementById(successId);
   msg.style.display = 'block';
   msg.style.color = '#00e5c8';
-  msg.style.fontFamily = "'Syne', sans-serif";
-  msg.style.fontWeight = '700';
+  msg.style.fontWeight = '500';
   msg.style.fontSize = '14px';
   msg.style.marginTop = '14px';
   msg.textContent = `✓ You're on the list! We'll reach out to ${email} soon.`;
