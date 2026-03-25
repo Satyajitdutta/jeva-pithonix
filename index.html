@@ -1056,10 +1056,11 @@ reveals.forEach(r => obs.observe(r));
 
 // Chat state
 // ── SARVAM TTS ──
-let currentAudio = null;
 let speakingBtn = null;
+let currentAudio = null;
 
 async function speakText(text, btn) {
+  // Stop currently playing audio
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
@@ -1072,6 +1073,7 @@ async function speakText(text, btn) {
 
   btn.textContent = '⏳ Loading...';
   btn.classList.add('loading');
+  speakingBtn = btn;
 
   try {
     const res = await fetch('/api/speak', {
@@ -1079,20 +1081,22 @@ async function speakText(text, btn) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
     });
+
     const data = await res.json();
-    if (!data.audio) throw new Error('No audio');
+    if (!data.audio) throw new Error(data.error || 'No audio');
 
     const binary = atob(data.audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    const blob = new Blob([bytes], { type: 'audio/wav' });
+    const mimeType = data.format === 'mp3' ? 'audio/mpeg' : 'audio/wav';
+    const blob = new Blob([bytes], { type: mimeType });
     const url = URL.createObjectURL(blob);
 
     currentAudio = new Audio(url);
-    speakingBtn = btn;
     btn.textContent = '🔊 Speaking...';
     btn.classList.remove('loading');
     btn.classList.add('playing');
+
     currentAudio.play();
     currentAudio.onended = () => {
       btn.textContent = '🔊 Speak';
@@ -1101,10 +1105,13 @@ async function speakText(text, btn) {
       URL.revokeObjectURL(url);
     };
   } catch(e) {
+    console.error('Speak error:', e);
     btn.textContent = '🔊 Speak';
     btn.classList.remove('loading', 'playing');
+    speakingBtn = null;
   }
 }
+
 
 let msgCounter = 0;
 let chatHistory = [];
@@ -1173,13 +1180,36 @@ async function callJEVA(userMessage) {
       body: JSON.stringify({ messages: chatHistory })
     });
     const data = await res.json();
+
+    // Rate limit hit
+    if (res.status === 429) {
+      removeTyping();
+      addMessage('jeva', "You've explored 10 messages with me — that's the demo limit. To continue the conversation and see JEVA in full action, join the waitlist below. We'll personally reach out within 24 hours. 🙏");
+      // Smooth scroll to waitlist
+      setTimeout(() => document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }), 1500);
+      setJevaState(false);
+      return;
+    }
+
     const reply = data?.reply;
     if (!reply) throw new Error('empty');
     chatHistory.push({ role: 'assistant', content: reply });
-    removeTyping(); addMessage('jeva', reply);
+    removeTyping();
+    addMessage('jeva', reply);
+
+    // Show remaining count subtly after 7 messages
+    if (data.remaining <= 3 && data.remaining > 0) {
+      const area = document.getElementById('chat-area');
+      const note = document.createElement('div');
+      note.style.cssText = 'text-align:center;font-size:11px;color:rgba(0,229,200,0.4);padding:4px 0;font-family:var(--font-body);';
+      note.textContent = `${data.remaining} demo message${data.remaining > 1 ? 's' : ''} remaining`;
+      area.appendChild(note);
+      area.scrollTop = area.scrollHeight;
+    }
+
   } catch(e) {
     removeTyping();
-    addMessage('jeva', "I'm having a brief connection issue — please try again in a moment. I'm right here.");
+    addMessage('jeva', "I'm having a brief connection issue — please try again in a moment.");
   }
   setJevaState(false);
 }
