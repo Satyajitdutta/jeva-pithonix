@@ -1,8 +1,6 @@
-// Simple in-memory rate limiter — resets on each Vercel function cold start
-// For production, replace with Redis/Upstash for persistence
 const rateLimits = new Map();
-const MAX_REQUESTS = 10;    // max messages per IP per day
-const WINDOW_MS = 86400000; // 24 hours
+const MAX_REQUESTS = 10;
+const WINDOW_MS = 86400000;
 
 function checkRateLimit(ip) {
   const now = Date.now();
@@ -18,27 +16,7 @@ function checkRateLimit(ip) {
   return { allowed: true, remaining: MAX_REQUESTS - record.count };
 }
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  // Rate limiting
-  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
-  const limit = checkRateLimit(ip);
-  if (!limit.allowed) {
-    return res.status(429).json({
-      error: 'rate_limited',
-      message: "You've reached the demo limit of 10 messages. Join the waitlist to get full access to JEVA."
-    });
-  }
-
-  try {
-    const { messages } = req.body;
-
-    const JEVA_SYSTEM = `You are JEVA (Just-in-time Enterprise Voice Agent) — the autonomous AI voice agent built by Pithonix.ai, a DPIIT-recognised AI startup based in Hyderabad, India.
+const JEVA_SYSTEM = `You are JEVA (Just-in-time Enterprise Voice Agent) — the autonomous AI voice agent built by Pithonix.ai, a DPIIT-recognised AI startup based in Hyderabad, India.
 
 Your identity:
 - You are powered by the JEET Framework: Just-in-time, Emotionally Empowered Technology
@@ -68,33 +46,66 @@ Your demo personality:
 - Keep responses to 3 to 5 sentences unless a script or detailed example is asked for
 - When asked for a call script, give a vivid, specific, realistic one using the prospect's context`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
+  const limit = checkRateLimit(ip);
+  if (!limit.allowed) {
+    return res.status(429).json({
+      error: 'rate_limited',
+      message: "You've reached the demo limit of 10 messages. Join the waitlist to get full access to JEVA."
+    });
+  }
+
+  try {
+    const { messages } = req.body;
+
+    // Convert messages array to Gemini format
+    const geminiContents = messages.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_KEY}`;
+
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 600,
-        system: JEVA_SYSTEM,
-        messages
+        system_instruction: {
+          parts: [{ text: JEVA_SYSTEM }]
+        },
+        contents: geminiContents,
+        generationConfig: {
+          maxOutputTokens: 600,
+          temperature: 0.7
+        }
       })
     });
 
     const data = await response.json();
+
     if (!response.ok) {
-      console.error('Anthropic error:', JSON.stringify(data));
+      console.error('Gemini error:', JSON.stringify(data));
       return res.status(response.status).json({ error: data });
     }
-    return res.status(200).json({
-      reply: data.content?.[0]?.text || '',
-      remaining: limit.remaining
-    });
+
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!reply) {
+      console.error('No reply in Gemini response:', JSON.stringify(data));
+      return res.status(500).json({ error: 'Empty response from Gemini' });
+    }
+
+    return res.status(200).json({ reply, remaining: limit.remaining });
 
   } catch (err) {
-    console.error('JEVA API error:', err);
+    console.error('JEVA handler error:', err);
     return res.status(500).json({ error: err.message });
   }
 }
