@@ -72,7 +72,7 @@ export default async function handler(req, res) {
     }));
 
     const GEMINI_KEY = process.env.GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -83,11 +83,8 @@ export default async function handler(req, res) {
         },
         contents: geminiContents,
         generationConfig: {
-          maxOutputTokens: 2048,
-          temperature: 1.0,
-          thinkingConfig: {
-            thinkingBudget: 0
-          }
+          maxOutputTokens: 800,
+          temperature: 0.7
         }
       })
     });
