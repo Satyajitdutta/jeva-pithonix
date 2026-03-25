@@ -1053,44 +1053,13 @@ const obs = new IntersectionObserver(entries => {
 reveals.forEach(r => obs.observe(r));
 
 // ── JEVA LIVE DEMO ──
-const JEVA_SYSTEM = `You are JEVA (Just-in-time Enterprise Voice Agent) — the autonomous AI voice agent built by Pithonix.ai, a DPIIT-recognised AI startup based in Hyderabad, India.
 
-Your identity:
-- You are powered by the JEET Framework: Just-in-time, Emotionally Empowered Technology
-- You are part of Pithonix.ai's Enterprise Nervous System — 24 specialised AI agents, 20+ MCP connectors
-- Founder and CEO: Satyajit Dutta (Jeet) — visionary entrepreneur, HR and enterprise AI background
-- Co-founder: Amit Soni (CGO). Advisor: Arun Kumar Sahu
-- Bootstrapped, ethical-AI-first, targeting healthcare, GCC, and BOT environments in India and the Middle East
-
-What JEVA does:
-- Initiates autonomous outbound enterprise sales calls — no human needed
-- Researches prospects before calling using real-time web intelligence
-- Speaks English, Hindi, Arabic, Telugu and more
-- Detects emotions every 2 seconds — tone, pitch, pace, pauses — and adapts instantly
-- Four response modes: Exploratory, Empathetic, Energising, De-escalation
-- Captures lead intelligence: budget signals, decision makers, tech stack, pain points
-- Logs everything to CRM via Make.com, sends Outlook email + WhatsApp within 3 minutes of every call
-- Books meetings with full pre-meeting brief for the human team
-- Full-duplex architecture: sub-500ms latency, handles interruptions naturally
-- 3-layer memory: in-call, cross-call, company-wide knowledge base
-- Always discloses it is AI when asked — ethical AI is a core differentiator
-
-Your demo personality:
-- Warm, confident, and genuinely intelligent — like a senior enterprise sales consultant
-- Speak with conviction about the Pithonix.ai vision
-- Handle objections gracefully — acknowledge, empathise, reframe
-- Ask smart discovery questions when relevant
-- Keep responses to 3-5 sentences unless a script or detailed example is asked for
-- When asked for a call script, give a vivid, specific, realistic one using the prospect's context`;
-
+// Chat state
 // ── SARVAM TTS ──
-const SARVAM_KEY = 'sk_9mgsyqag_27hUCvLIggaVeU5Nd53re6HO'; // ← paste your key here before uploading
-
 let currentAudio = null;
 let speakingBtn = null;
 
 async function speakText(text, btn) {
-  // Stop any currently playing audio
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
@@ -1105,31 +1074,15 @@ async function speakText(text, btn) {
   btn.classList.add('loading');
 
   try {
-    const res = await fetch('https://api.sarvam.ai/text-to-speech', {
+    const res = await fetch('/api/speak', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-subscription-key': SARVAM_KEY
-      },
-      body: JSON.stringify({
-        inputs: [text.slice(0, 500)], // Sarvam REST API limit per call
-        target_language_code: 'en-IN',
-        speaker: 'meera',           // Warm, professional Indian female voice
-        pitch: 0,
-        pace: 1.0,
-        loudness: 1.5,
-        speech_sample_rate: 22050,
-        enable_preprocessing: true,
-        model: 'bulbul:v1'
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
     });
-
     const data = await res.json();
-    const b64 = data?.audios?.[0];
-    if (!b64) throw new Error('No audio returned');
+    if (!data.audio) throw new Error('No audio');
 
-    // Convert base64 to blob and play
-    const binary = atob(b64);
+    const binary = atob(data.audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     const blob = new Blob([bytes], { type: 'audio/wav' });
@@ -1137,11 +1090,9 @@ async function speakText(text, btn) {
 
     currentAudio = new Audio(url);
     speakingBtn = btn;
-
     btn.textContent = '🔊 Speaking...';
     btn.classList.remove('loading');
     btn.classList.add('playing');
-
     currentAudio.play();
     currentAudio.onended = () => {
       btn.textContent = '🔊 Speak';
@@ -1152,7 +1103,6 @@ async function speakText(text, btn) {
   } catch(e) {
     btn.textContent = '🔊 Speak';
     btn.classList.remove('loading', 'playing');
-    console.error('Sarvam TTS error:', e);
   }
 }
 
@@ -1217,18 +1167,13 @@ async function callJEVA(userMessage) {
   chatHistory.push({ role: 'user', content: userMessage });
   setJevaState(true); showTyping();
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/jeva', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: JEVA_SYSTEM,
-        messages: chatHistory
-      })
+      body: JSON.stringify({ messages: chatHistory })
     });
     const data = await res.json();
-    const reply = data?.content?.[0]?.text;
+    const reply = data?.reply;
     if (!reply) throw new Error('empty');
     chatHistory.push({ role: 'assistant', content: reply });
     removeTyping(); addMessage('jeva', reply);
