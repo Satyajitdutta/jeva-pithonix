@@ -9,11 +9,7 @@ export default async function handler(req, res) {
     const { text } = req.body;
     if (!text) return res.status(400).json({ error: 'No text provided' });
 
-    // Clean markdown symbols Gemini might include
     const cleanText = text.replace(/[*#_`•]/g, '').slice(0, 500);
-
-    console.log('SARVAM_API_KEY present:', !!process.env.SARVAM_API_KEY);
-    console.log('Key prefix:', process.env.SARVAM_API_KEY?.slice(0, 6));
 
     const response = await fetch('https://api.sarvam.ai/text-to-speech', {
       method: 'POST',
@@ -30,24 +26,30 @@ export default async function handler(req, res) {
         loudness: 1.5,
         speech_sample_rate: 22050,
         enable_preprocessing: true,
-        model: 'bulbul:v1'
+        model: 'bulbul:v3'
       })
     });
 
     const rawText = await response.text();
     console.log('Sarvam status:', response.status);
-    console.log('Sarvam response preview:', rawText.slice(0, 200));
+    console.log('Sarvam preview:', rawText.slice(0, 300));
 
     let data;
     try { data = JSON.parse(rawText); }
-    catch(e) { return res.status(500).json({ error: 'Bad JSON from Sarvam', raw: rawText.slice(0, 200) }); }
+    catch(e) {
+      return res.status(500).json({ error: 'Bad JSON from Sarvam', raw: rawText.slice(0, 200) });
+    }
 
-    if (!response.ok) return res.status(response.status).json({ error: data });
+    if (!response.ok) {
+      return res.status(response.status).json({ error: data });
+    }
 
     const audio = data?.audios?.[0];
-    if (!audio) return res.status(500).json({ error: 'No audio in response', keys: Object.keys(data) });
+    if (!audio) {
+      return res.status(500).json({ error: 'No audio in response', keys: Object.keys(data) });
+    }
 
-    return res.status(200).json({ audio });
+    return res.status(200).json({ audio, format: 'wav' });
 
   } catch (err) {
     console.error('Sarvam error:', err.message);
