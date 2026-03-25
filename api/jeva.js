@@ -1,10 +1,39 @@
+// Simple in-memory rate limiter — resets on each Vercel function cold start
+// For production, replace with Redis/Upstash for persistence
+const rateLimits = new Map();
+const MAX_REQUESTS = 10;    // max messages per IP per day
+const WINDOW_MS = 86400000; // 24 hours
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const record = rateLimits.get(ip);
+  if (!record || now - record.start > WINDOW_MS) {
+    rateLimits.set(ip, { count: 1, start: now });
+    return { allowed: true, remaining: MAX_REQUESTS - 1 };
+  }
+  if (record.count >= MAX_REQUESTS) {
+    return { allowed: false, remaining: 0 };
+  }
+  record.count++;
+  return { allowed: true, remaining: MAX_REQUESTS - record.count };
+}
+
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Rate limiting
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
+  const limit = checkRateLimit(ip);
+  if (!limit.allowed) {
+    return res.status(429).json({
+      error: 'rate_limited',
+      message: "You've reached the demo limit of 10 messages. Join the waitlist to get full access to JEVA."
+    });
+  }
 
   try {
     const { messages } = req.body;
@@ -47,7 +76,7 @@ Your demo personality:
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-opus-4-5',
         max_tokens: 600,
         system: JEVA_SYSTEM,
         messages
@@ -55,8 +84,14 @@ Your demo personality:
     });
 
     const data = await response.json();
-    if (!response.ok) return res.status(response.status).json({ error: data });
-    return res.status(200).json({ reply: data.content?.[0]?.text || '' });
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data));
+      return res.status(response.status).json({ error: data });
+    }
+    return res.status(200).json({
+      reply: data.content?.[0]?.text || '',
+      remaining: limit.remaining
+    });
 
   } catch (err) {
     console.error('JEVA API error:', err);
