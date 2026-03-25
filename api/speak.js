@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const { text } = req.body;
-    if (!text) return res.status(400).json({ error: 'No text provided' });
+    if (!text) return res.status(400).json({ error: 'No text' });
 
     const cleanText = text.replace(/[*#_`•]/g, '').slice(0, 500);
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         text: cleanText,
         target_language_code: 'en-IN',
-        speaker: 'Ishita',
+        speaker: 'ishita',
         model: 'bulbul:v3',
         pace: 0.95,
         temperature: 0.6,
@@ -28,29 +28,23 @@ export default async function handler(req, res) {
       })
     });
 
-    const rawText = await response.text();
-    console.log('Sarvam status:', response.status);
-    console.log('Sarvam preview:', rawText.slice(0, 300));
+    const raw = await response.text();
+    console.log('SARVAM_STATUS:', response.status);
+    console.log('SARVAM_FULL:', raw.slice(0, 200));
 
     let data;
-    try { data = JSON.parse(rawText); }
-    catch(e) {
-      return res.status(500).json({ error: 'Bad JSON from Sarvam', raw: rawText.slice(0, 200) });
-    }
+    try { data = JSON.parse(raw); }
+    catch(e) { return res.status(500).json({ error: 'Bad JSON', raw }); }
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data });
-    }
+    if (!response.ok) return res.status(response.status).json({ error: data });
 
     const audio = data?.audios?.[0];
-    if (!audio) {
-      return res.status(500).json({ error: 'No audio in response', keys: Object.keys(data) });
-    }
+    if (!audio) return res.status(500).json({ error: 'No audio', data });
 
     return res.status(200).json({ audio, format: 'wav' });
 
   } catch (err) {
-    console.error('Sarvam error:', err.message);
+    console.error('ERROR:', err.message);
     return res.status(500).json({ error: err.message });
   }
 }
