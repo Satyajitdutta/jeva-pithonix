@@ -83,8 +83,11 @@ export default async function handler(req, res) {
         },
         contents: geminiContents,
         generationConfig: {
-          maxOutputTokens: 600,
-          temperature: 0.7
+          maxOutputTokens: 2048,
+          temperature: 1.0,
+          thinkingConfig: {
+            thinkingBudget: 0
+          }
         }
       })
     });
