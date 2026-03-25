@@ -9,13 +9,7 @@ export default async function handler(req, res) {
     const { text } = req.body;
     if (!text) return res.status(400).json({ error: 'No text provided' });
 
-    const cleanText = text.replace(/[*#_`•]/g, '').slice(0, 2500);
-
-    // bulbul:v3 correct parameters per official Sarvam docs:
-    // NO pitch, NO loudness, NO enable_preprocessing — all unsupported in v3
-    // pace range: 0.5 to 2.0 | temperature: 0.01 to 2.0 (v3 only)
-    // speaker must be from v3 list — 'meera' was v1 only, using 'Ishita'
-    // text field (not inputs array) for v3
+    const cleanText = text.replace(/[*#_`•]/g, '').slice(0, 500);
 
     const response = await fetch('https://api.sarvam.ai/text-to-speech', {
       method: 'POST',
